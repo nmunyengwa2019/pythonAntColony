@@ -45,6 +45,7 @@ def index():
 
 @app.route('/antcolony/timetable')
 def timetable():
+    #TODO: CREATE A TIMETABLE 
     def distance(point1, point2):
         return np.sqrt(np.sum((point1 - point2)**2))
 
