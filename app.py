@@ -7,44 +7,19 @@ from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
-@app.route('/')
+courses = [] 
+
+@app.route('/',methods=['POST'])
 def index():
-        
-    courses = [
-        "Math 3 credits",
-        "Physics 4 credits",
-        "English 2 credits",
-        "History 3 credits"
-    ]
-    
-    timeslots = [
-        ("Monday", "9:00-10:00"),
-        ("Monday", "11:00-12:00"),
-        ("Tuesday", "9:00-10:00"),
-        ("Tuesday", "11:00-12:00"),
-        ("Wednesday", "9:00-10:00"),
-    ]
-    timetable = {}
-    for course in courses:
-  # Prioritize courses with higher credits for earlier slots
-        credits = int(course.split(" ")[1])  # Extract credit info from course name
-        available_slots = [slot for slot in timeslots if slot not in timetable.values()]
-  # Sort available slots by time (assuming earlier is preferred)
-        available_slots.sort(key=lambda x: x[1].split("-")[0])
-  # Assign course to the first available slot
-        for slot in available_slots:
-            if credits <= len(timetable) or not timetable:  # Check if slots are full or no assignments yet
-                timetable[course] = slot
-                timeslots.remove(slot)
-                break
+    data = request.get_json()
+    courses.clear()
+    for course in data:
+        courses.append({"course": course["course"], "time": course["time"]})
 
-# Print the timetable
-    for course, slot in timetable.items():
-        cs = f"{course}: {slot[0]}, {slot[1]}"
-    return timetable
+    return jsonify(courses)
 
-@app.route('/antcolony/timetable')
-def timetable():
+@app.route('/antcolony/timetable/<course_data>',methods=['POST'])
+def timetable(course_data):
     #TODO: CREATE A TIMETABLE 
     def distance(point1, point2):
         return np.sqrt(np.sum((point1 - point2)**2))
