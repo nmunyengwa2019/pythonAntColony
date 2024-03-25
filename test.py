@@ -6,7 +6,7 @@ app = Flask(__name__)
 def distance(course1, course2):
     # Modify this function to calculate a distance metric between courses
     # (e.g., consider course prerequisites, similarity in topics)
-    return np.abs(course1['duration'] - course2['duration'])
+    return max(np.abs(course1['duration'] - course2['duration']),0.0001)
 
 def ant_colony_optimization(courses, n_ants, n_iterations, alpha, beta, evaporation_rate, Q):
     n_courses = len(courses)
@@ -54,6 +54,7 @@ def ant_colony_optimization(courses, n_ants, n_iterations, alpha, beta, evaporat
             current_course_index = course_name_to_index[schedules[i][i]['name']]
             next_course_index = course_name_to_index[schedules[i][i + 1]['name']]
             pheromone[current_course_index, next_course_index] += Q / schedule_durations[i]
+        # pheromone[current_course]
       # ... (rest of the loop)
         # for i in range(n_courses - 1):
         #     pheromone[schedules[i][i]['name'], schedules[i][i + 1]['name']] += Q / schedule_durations[i]
